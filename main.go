@@ -10,7 +10,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"golang.org/x/crypto/ssh"
@@ -45,6 +44,7 @@ type ProcessInfo struct {
 func main() {
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
+	/*
 	router.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:5173", "https://ssh.rainly.net"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
@@ -70,6 +70,7 @@ func main() {
       }
       c.Next()
     })
+	*/
 
 	router.GET("/api/ssh", sshWSHandler)
 	log.Fatal(router.Run(":8667"))
@@ -179,7 +180,7 @@ func sshWSHandler(c *gin.Context) {
 
 	// 启动资源采集协程
 	go collectResource(wsConn, sshClient)
-	// 启动进程采集协程（新增）
+	// 启动进程采集协程
 	go collectProcesses(wsConn, sshClient)
 
 	// 阻塞保持会话连接
@@ -304,4 +305,5 @@ func sendMsg(wsConn *websocket.Conn, typ string, data interface{}) {
 	msg := WSMessage{Type: typ, Data: dataBytes}
 	msgBytes, _ := json.Marshal(msg)
 	wsConn.WriteMessage(websocket.TextMessage, msgBytes)
+
 }
