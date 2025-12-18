@@ -18,7 +18,7 @@ import (
 var upgrader = websocket.Upgrader{CheckOrigin: func(r *http.Request) bool { return true }}
 var wsMutex sync.Mutex
 
-// 消息结构体（与前端对齐）
+// 消息结构体（与前端对齐，请修改成你自己的前端请求结构体）
 type WSMessage struct {
 	Type string          `json:"type"`
 	Data json.RawMessage `json:"data"`
@@ -32,7 +32,7 @@ type ResourceInfo struct {
 	NetSend float64 `json:"netSend"`
 }
 
-// 进程信息结构体（新增）
+// 进程信息结构体
 type ProcessInfo struct {
 	Pid  int32   `json:"pid"`  // 进程ID
 	Name string  `json:"name"` // 进程名
@@ -307,3 +307,4 @@ func sendMsg(wsConn *websocket.Conn, typ string, data interface{}) {
 	wsConn.WriteMessage(websocket.TextMessage, msgBytes)
 
 }
+
